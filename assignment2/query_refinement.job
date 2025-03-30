@@ -1,0 +1,105 @@
+#!/bin/bash
+
+#SBATCH --partition=gpu_a100
+#SBATCH --gpus=1
+#SBATCH --job-name=QRefEval
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=9
+#SBATCH --time=03:00:00
+#SBATCH --output=output_slurm/NEW_QUERY_REFslurm_output_%A.out
+
+module purge
+module load 2023
+module load Anaconda3/2023.07-2
+
+source activate ir_env
+
+################## QUERY PREPROCESING DURING EVALUATION ##################
+# # dense
+# python -m neural_ir.rank_dense --q "data/dev_queries.tsv" --checkpoint "output/your_creativity/default/dense/model" --o "output/your_creativity/preprocessing_q_eval/200_dense.trec" --preprocess_q
+# python -m neural_ir.rank_dense --q "corrupted_data/contractions/dev_queries.tsv" --checkpoint "output/your_creativity/default/dense/model" --o "output/your_creativity/preprocessing_q_eval/200_dense_contractions.trec" --preprocess_q
+# python -m neural_ir.rank_dense --q "corrupted_data/merged/dev_queries.tsv" --checkpoint "output/your_creativity/default/dense/model" --o "output/your_creativity/preprocessing_q_eval/200_dense_merged.trec" --preprocess_q
+# python -m neural_ir.rank_dense --q "corrupted_data/merged_typos/dev_queries.tsv" --checkpoint "output/your_creativity/default/dense/model" --o "output/your_creativity/preprocessing_q_eval/200_dense_merged_typos.trec" --preprocess_q
+# python -m neural_ir.rank_dense --q "corrupted_data/typos/dev_queries.tsv" --checkpoint "output/your_creativity/default/dense/model" --o "output/your_creativity/preprocessing_q_eval/200_dense_typos.trec" --preprocess_q
+
+# # ce
+# python -m neural_ir.rerank --q "data/dev_queries.tsv" --checkpoint "output/your_creativity/default/ce/model" --o "output/your_creativity/preprocessing_q_eval/200_ce.trec" --run "data/dev_bm25.trec" --preprocess_q
+# python -m neural_ir.rerank --q "corrupted_data/contractions/dev_queries.tsv" --checkpoint "output/your_creativity/default/ce/model" --o "output/your_creativity/preprocessing_q_eval/200_ce_contractions.trec" --run "data/dev_bm25.trec" --preprocess_q
+# python -m neural_ir.rerank --q "corrupted_data/merged/dev_queries.tsv" --checkpoint "output/your_creativity/default/ce/model" --o "output/your_creativity/preprocessing_q_eval/200_ce_merged.trec" --run "data/dev_bm25.trec" --preprocess_q
+# python -m neural_ir.rerank --q "corrupted_data/merged_typos/dev_queries.tsv" --checkpoint "output/your_creativity/default/ce/model" --o "output/your_creativity/preprocessing_q_eval/200_ce_merged_typos.trec" --run "data/dev_bm25.trec" --preprocess_q
+# python -m neural_ir.rerank --q "corrupted_data/typos/dev_queries.tsv" --checkpoint "output/your_creativity/default/ce/model" --o "output/your_creativity/preprocessing_q_eval/200_ce_typos.trec" --run "data/dev_bm25.trec" --preprocess_q
+
+# # sparse - not run
+# python -m neural_ir.rank_sparse --q "data/dev_queries.tsv" --checkpoint "output/your_creativity/default/sparse/model" --o "output/your_creativity/preprocessing_q_eval/200_sparse.trec" --preprocess_q
+# python -m neural_ir.rank_sparse --q "corrupted_data/contractions/dev_queries.tsv" --checkpoint "output/your_creativity/default/sparse/model" --o "output/your_creativity/preprocessing_q_eval/200_sparse_contractions.trec" --preprocess_q
+# python -m neural_ir.rank_sparse --q "corrupted_data/merged/dev_queries.tsv" --checkpoint "output/your_creativity/default/sparse/model" --o "output/your_creativity/preprocessing_q_eval/200_sparse_merged.trec" --preprocess_q
+# python -m neural_ir.rank_sparse --q "corrupted_data/merged_typos/dev_queries.tsv" --checkpoint "output/your_creativity/default/sparse/model" --o "output/your_creativity/preprocessing_q_eval/200_sparse_merged_typos.trec" --preprocess_q
+# python -m neural_ir.rank_sparse --q "corrupted_data/typos/dev_queries.tsv" --checkpoint "output/your_creativity/default/sparse/model" --o "output/your_creativity/preprocessing_q_eval/200_sparse_typos.trec" --preprocess_q
+
+
+################## QUERY EXPANSION DURING EVALUATION ##################
+# # dense
+# python -m neural_ir.rank_dense --q "data/dev_queries.tsv" --checkpoint "output/your_creativity/default/dense/model" --o "output/your_creativity/expansion_q_eval/200_dense.trec" --query_expansion
+# python -m neural_ir.rank_dense --q "corrupted_data/contractions/dev_queries.tsv" --checkpoint "output/your_creativity/default/dense/model" --o "output/your_creativity/expansion_q_eval/200_dense_contractions.trec" --query_expansion
+# python -m neural_ir.rank_dense --q "corrupted_data/merged/dev_queries.tsv" --checkpoint "output/your_creativity/default/dense/model" --o "output/your_creativity/expansion_q_eval/200_dense_merged.trec" --query_expansion
+# python -m neural_ir.rank_dense --q "corrupted_data/merged_typos/dev_queries.tsv" --checkpoint "output/your_creativity/default/dense/model" --o "output/your_creativity/expansion_q_eval/200_dense_merged_typos.trec" --query_expansion
+# python -m neural_ir.rank_dense --q "corrupted_data/typos/dev_queries.tsv" --checkpoint "output/your_creativity/default/dense/model" --o "output/your_creativity/expansion_q_eval/200_dense_typos.trec" --query_expansion
+
+# # ce
+# python -m neural_ir.rerank --q "data/dev_queries.tsv" --checkpoint "output/your_creativity/default/ce/model" --o "output/your_creativity/expansion_q_eval/200_ce.trec" --run "data/dev_bm25.trec" --query_expansion
+# python -m neural_ir.rerank --q "corrupted_data/contractions/dev_queries.tsv" --checkpoint "output/your_creativity/default/ce/model" --o "output/your_creativity/expansion_q_eval/200_ce_contractions.trec" --run "data/dev_bm25.trec" --query_expansion
+# python -m neural_ir.rerank --q "corrupted_data/merged/dev_queries.tsv" --checkpoint "output/your_creativity/default/ce/model" --o "output/your_creativity/expansion_q_eval/200_ce_merged.trec" --run "data/dev_bm25.trec" --query_expansion
+# python -m neural_ir.rerank --q "corrupted_data/merged_typos/dev_queries.tsv" --checkpoint "output/your_creativity/default/ce/model" --o "output/your_creativity/expansion_q_eval/200_ce_merged_typos.trec" --run "data/dev_bm25.trec" --query_expansion
+# python -m neural_ir.rerank --q "corrupted_data/typos/dev_queries.tsv" --checkpoint "output/your_creativity/default/ce/model" --o "output/your_creativity/expansion_q_eval/200_ce_typos.trec" --run "data/dev_bm25.trec" --query_expansion
+
+# # sparse - not run
+# python -m neural_ir.rank_sparse --q "data/dev_queries.tsv" --checkpoint "output/your_creativity/default/sparse/model" --o "output/your_creativity/expansion_q_eval/200_sparse.trec" --query_expansion
+# python -m neural_ir.rank_sparse --q "corrupted_data/contractions/dev_queries.tsv" --checkpoint "output/your_creativity/default/sparse/model" --o "output/your_creativity/expansion_q_eval/200_sparse_contractions.trec" --query_expansion
+# python -m neural_ir.rank_sparse --q "corrupted_data/merged/dev_queries.tsv" --checkpoint "output/your_creativity/default/sparse/model" --o "output/your_creativity/expansion_q_eval/200_sparse_merged.trec" --query_expansion
+# python -m neural_ir.rank_sparse --q "corrupted_data/merged_typos/dev_queries.tsv" --checkpoint "output/your_creativity/default/sparse/model" --o "output/your_creativity/expansion_q_eval/200_sparse_merged_typos.trec" --query_expansion
+# python -m neural_ir.rank_sparse --q "corrupted_data/typos/dev_queries.tsv" --checkpoint "output/your_creativity/default/sparse/model" --o "output/your_creativity/expansion_q_eval/200_sparse_typos.trec" --query_expansion
+
+
+################## TRAIN WITH DOC&QUERY PREPROCESSING ##################
+# dense
+python -m neural_ir.train --pretrained sentence-transformers/paraphrase-MiniLM-L3-v2 --max_steps 1000 --train_batch_size 32 --output_dir "output/your_creativity/preprocess_dq" --preprocess_q --preprocess_d dense
+
+# evaluate output/your_creativity/preprocess_dq/dense/model 
+python -m neural_ir.rank_dense --q "data/dev_queries.tsv" --checkpoint "output/your_creativity/preprocess_dq/dense/model" --o "output/your_creativity/preprocess_dq/ 1000_dense.trec" --preprocess_q --preprocess_d
+python -m neural_ir.rank_dense --q "corrupted_data/contractions/dev_queries.tsv" --checkpoint "output/your_creativity/preprocess_dq/dense/model" --o "output/your_creativity/preprocess_dq/ 1000_dense_contractions.trec" --preprocess_q --preprocess_d
+python -m neural_ir.rank_dense --q "corrupted_data/merged/dev_queries.tsv" --checkpoint "output/your_creativity/preprocess_dq/dense/model" --o "output/your_creativity/preprocess_dq/ 1000_dense_merged.trec" --preprocess_q --preprocess_d
+python -m neural_ir.rank_dense --q "corrupted_data/merged_typos/dev_queries.tsv" --checkpoint "output/your_creativity/preprocess_dq/dense/model" --o "output/your_creativity/preprocess_dq/ 1000_dense_merged_typos.trec" --preprocess_q --preprocess_d
+python -m neural_ir.rank_dense --q "corrupted_data/typos/dev_queries.tsv" --checkpoint "output/your_creativity/preprocess_dq/dense/model" --o "output/your_creativity/preprocess_dq/ 1000_dense_typos.trec" --preprocess_q --preprocess_d
+
+# ce
+python -m neural_ir.train --pretrained distilbert-base-uncased --max_steps 1000 --train_batch_size 32 --output_dir "output/your_creativity/preprocess_dq" --preprocess_q --preprocess_d ce
+
+# evaluate output/your_creativity/preprocess_dq/ce/model
+python -m neural_ir.rerank --q "data/dev_queries.tsv" --checkpoint "output/your_creativity/preprocess_dq/ce/model" --o "output/your_creativity/preprocess_dq/ 1000_ce.trec" --run "data/dev_bm25.trec" --preprocess_q --preprocess_d
+python -m neural_ir.rerank --q "corrupted_data/contractions/dev_queries.tsv" --checkpoint "output/your_creativity/preprocess_dq/ce/model" --o "output/your_creativity/preprocess_dq/ 1000_ce_contractions.trec" --run "data/dev_bm25.trec" --preprocess_q --preprocess_d
+python -m neural_ir.rerank --q "corrupted_data/merged/dev_queries.tsv" --checkpoint "output/your_creativity/preprocess_dq/ce/model" --o "output/your_creativity/preprocess_dq/ 1000_ce_merged.trec" --run "data/dev_bm25.trec" --preprocess_q --preprocess_d
+python -m neural_ir.rerank --q "corrupted_data/merged_typos/dev_queries.tsv" --checkpoint "output/your_creativity/preprocess_dq/ce/model" --o "output/your_creativity/preprocess_dq/ 1000_ce_merged_typos.trec" --run "data/dev_bm25.trec" --preprocess_q --preprocess_d
+python -m neural_ir.rerank --q "corrupted_data/typos/dev_queries.tsv" --checkpoint "output/your_creativity/preprocess_dq/ce/model" --o "output/your_creativity/preprocess_dq/ 1000_ce_typos.trec" --run "data/dev_bm25.trec" --preprocess_q --preprocess_d
+
+# sparse
+python -m neural_ir.train --pretrained sentence-transformers/paraphrase-MiniLM-L3-v2 --max_steps 1000 --train_batch_size 32 --output_dir "output/your_creativity/preprocess_dq" --preprocess_q --preprocess_d sparse
+
+# evaluate output/your_creativity/preprocess_dq/sparse/model
+python -m neural_ir.rank_sparse --q "data/dev_queries.tsv" --checkpoint "output/your_creativity/preprocess_dq/sparse/model" --o "output/your_creativity/preprocess_dq/ 1000_sparse.trec" --preprocess_q --preprocess_d
+python -m neural_ir.rank_sparse --q "corrupted_data/contractions/dev_queries.tsv" --checkpoint "output/your_creativity/preprocess_dq/sparse/model" --o "output/your_creativity/preprocess_dq/ 1000_sparse_contractions.trec" --preprocess_q --preprocess_d
+python -m neural_ir.rank_sparse --q "corrupted_data/merged/dev_queries.tsv" --checkpoint "output/your_creativity/preprocess_dq/sparse/model" --o "output/your_creativity/preprocess_dq/ 1000_sparse_merged.trec" --preprocess_q --preprocess_d
+python -m neural_ir.rank_sparse --q "corrupted_data/merged_typos/dev_queries.tsv" --checkpoint "output/your_creativity/preprocess_dq/sparse/model" --o "output/your_creativity/preprocess_dq/ 1000_sparse_merged_typos.trec" --preprocess_q --preprocess_d
+python -m neural_ir.rank_sparse --q "corrupted_data/typos/dev_queries.tsv" --checkpoint "output/your_creativity/preprocess_dq/sparse/model" --o "output/your_creativity/preprocess_dq/ 1000_sparse_typos.trec" --preprocess_q --preprocess_d
+
+
+
+# ################## TRAIN WITH DOC&QUERY PREPROCESSING + 10% NOISE + QUERY EXPANSION ##################
+# # # dense
+# # python -m neural_ir.train --pretrained sentence-transformers/paraphrase-MiniLM-L3-v2 --max_steps 200 --train_batch_size 32 --output_dir "output/your_creativity/preprocess_dq" --preprocess_q --preprocess_d --query_expansion dense
+
+# # # evaluate output/your_creativity/preprocess_dq/dense/model
+# python -m neural_ir.rank_dense --q "data/dev_queries.tsv" --checkpoint "output/your_creativity/preprocess_dq/dense/model" --o "output/your_creativity/preprocess_dq/200_dense.trec" --preprocess_q --preprocess_d --query_expansion
+# python -m neural_ir.rank_dense --q "corrupted_data/contractions/dev_queries.tsv" --checkpoint "output/your_creativity/preprocess_dq/dense/model" --o "output/your_creativity/preprocess_dq/200_dense_contractions.trec" --preprocess_q --preprocess_d --query_expansion
+# python -m neural_ir.rank_dense --q "corrupted_data/merged/dev_queries.tsv" --checkpoint "output/your_creativity/preprocess_dq/dense/model" --o "output/your_creativity/preprocess_dq/200_dense_merged.trec" --preprocess_q --preprocess_d --query_expansion
+# python -m neural_ir.rank_dense --q "corrupted_data/merged_typos/dev_queries.tsv" --checkpoint "output/your_creativity/preprocess_dq/dense/model" --o "output/your_creativity/preprocess_dq/200_dense_merged_typos.trec" --preprocess_q --preprocess_d --query_expansion
+# python -m neural_ir.rank_dense --q "corrupted_data/typos/dev_queries.tsv" --checkpoint "output/your_creativity/preprocess_dq/dense/model" --o "output/your_creativity/preprocess_dq/200_dense_typos.trec" --preprocess_q --preprocess_d --query_expansion

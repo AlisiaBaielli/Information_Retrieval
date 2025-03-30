@@ -1,0 +1,10 @@
+pytest==7.4.0
+torch==2.5.1
+transformers==4.29
+tokenizers==0.13.3
+ir_measures==0.3.3
+faiss-cpu==1.9.0.post1
+pyserini==0.43.0
+jupyter==1.0.0
+contractions==0.1.73
+nltk==3.9.1
